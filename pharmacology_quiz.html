@@ -1,0 +1,395 @@
+<html>
+<head>
+    <title>Quiz de Farmacologia</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        h1 {
+            text-align: center;
+            color: #0056b3;
+        }
+        .quiz-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .question-block {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .question-block:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        .question-text {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #003d7a;
+        }
+        .options-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .options-list li {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .options-list li:hover {
+            background-color: #e9ecef;
+            border-color: #007bff;
+        }
+        .options-list li.selected {
+            background-color: #cfe2ff;
+            border-color: #007bff;
+            font-weight: bold;
+        }
+        .options-list li.correct-option {
+            background-color: #d4edda !important;
+            border-color: #28a745 !important;
+            color: #155724;
+        }
+        .options-list li.incorrect-option {
+            background-color: #f8d7da !important;
+            border-color: #dc3545 !important;
+            color: #721c24;
+        }
+        .feedback-section {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            background-color: #f8f9fa;
+        }
+        .feedback-section h4 {
+            margin-top: 0;
+            color: #0056b3;
+        }
+        .feedback-section p {
+            margin-bottom: 8px;
+        }
+        .feedback-section .correct-answer-text {
+            font-weight: bold;
+            color: #28a745;
+        }
+        .feedback-section .option-justification {
+            margin-left: 15px;
+            font-size: 0.95em;
+        }
+        .feedback-section .option-justification strong {
+            color: #555;
+        }
+        .navigation-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .navigation-buttons button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1em;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .navigation-buttons button:hover {
+            background-color: #0056b3;
+        }
+        .navigation-buttons button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quiz de Farmacologia</h1>
+
+    <div class="quiz-container">
+        <div id="question-area">
+            <!-- A pergunta atual será inserida aqui -->
+        </div>
+        <div class="navigation-buttons">
+            <button id="prev-btn" class="hidden">Anterior</button>
+            <button id="next-btn" class="hidden">Próxima</button>
+            <button id="submit-btn">Responder</button>
+        </div>
+        <div id="score-area" class="hidden">
+            <h2>Quiz Concluído!</h2>
+            <p>Sua pontuação: <span id="score"></span></p>
+            <button id="restart-btn">Reiniciar Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                "id": "Q1_OPIOIDES",
+                "type": "multiple_choice",
+                "theme": "Opioides",
+                "question": "Qual é o principal mecanismo de ação dos opioides analgésicos?",
+                "options": [
+                    {"key": "A", "text": "Bloqueio dos receptores de prostaglandina", "justification": "Incorreto. O bloqueio dos receptores de prostaglandina é mais característico da ação de alguns AINEs, não dos opioides."},
+                    {"key": "B", "text": "Agonismo dos receptores opioides no sistema nervoso central", "justification": "Correto. Os opioides ligam-se a receptores específicos (μ, δ, κ) no SNC e SNP, modulando a percepção da dor."},
+                    {"key": "C", "text": "Inibição da enzima ciclooxigenase", "justification": "Incorreto. A inibição da ciclooxigenase (COX) é o mecanismo primário dos AINEs."},
+                    {"key": "D", "text": "Liberação de endorfinas", "justification": "Incorreto. Embora as endorfinas sejam opioides endógenos, os fármacos opioides exógenos atuam diretamente como agonistas nos receptores, não primariamente pela liberação de endorfinas."}
+                ],
+                "answer": "B",
+                "explanation_general": "Os opioides exercem seus efeitos analgésicos primariamente através da ligação e ativação de receptores opioides (principalmente μ, δ, e κ) localizados no sistema nervoso central e periférico. Essa ligação modula as vias de transmissão da dor, resultando em analgesia. Além disso, afetam o componente emocional da dor."
+            },
+            {
+                "id": "Q2_AINES",
+                "type": "multiple_choice",
+                "theme": "AINEs",
+                "question": "Anti-inflamatórios não esteroidais (AINEs) seletivos para COX-2 foram desenvolvidos para minimizar quais efeitos adversos dos AINEs tradicionais?",
+                "options": [
+                    {"key": "A", "text": "Nefrotoxicidade e cardiotoxicidade", "justification": "Incorreto. Embora a nefrotoxicidade possa ser uma preocupação com todos os AINEs e a cardiotoxicidade seja um risco particular com os COX-2 seletivos, o objetivo principal do desenvolvimento dos COXIBs foi outro."},
+                    {"key": "B", "text": "Toxicidade gastrointestinal e disfunção plaquetária", "justification": "Correto. A COX-1 é constitutiva e importante para a proteção da mucosa gástrica e agregação plaquetária. AINEs tradicionais inibem COX-1 e COX-2. Os COX-2 seletivos foram criados para poupar a COX-1, reduzindo assim os problemas gastrointestinais e o risco de sangramento associado à disfunção plaquetária."},
+                    {"key": "C", "text": "Hepatotoxicidade e reações de hipersensibilidade", "justification": "Incorreto. Hepatotoxicidade e reações de hipersensibilidade podem ocorrer com vários AINEs, mas não foram o foco principal para o desenvolvimento dos COX-2 seletivos."},
+                    {"key": "D", "text": "Efeitos no sistema nervoso central e interações medicamentosas", "justification": "Incorreto. Efeitos no SNC e interações são considerações gerais para muitos fármacos, mas não o drive primário para a seletividade COX-2."}
+                ],
+                "answer": "B",
+                "explanation_general": "Os AINEs tradicionais inibem tanto a COX-1 (ciclooxigenase-1), que tem funções fisiológicas como proteção da mucosa gástrica e agregação plaquetária, quanto a COX-2 (ciclooxigenase-2), que é induzida durante a inflamação. A inibição da COX-1 é responsável por muitos dos efeitos adversos gastrointestinais e pelo aumento do risco de sangramento. Os AINEs seletivos para COX-2 foram desenvolvidos com o objetivo de manter a eficácia anti-inflamatória (inibindo a COX-2) enquanto minimizam os efeitos adversos associados à inibição da COX-1."
+            },
+            {
+                "id": "Q3_ANTIPSICOTICOS_DISCURSIVA_BONUS",
+                "type": "discursive",
+                "theme": "Antipsicóticos",
+                "question": "Explique as diferenças fundamentais nos mecanismos de ação entre antipsicóticos típicos (primeira geração) e atípicos (segunda geração). Relacione essas diferenças com seus respectivos perfis de eficácia e os tipos de efeitos colaterais mais comuns associados a cada classe.",
+                "explanation_general": "Antipsicóticos típicos atuam primariamente como antagonistas dos receptores de dopamina D2, sendo eficazes contra sintomas positivos da esquizofrenia, mas com alta incidência de sintomas extrapiramidais (EEP) e hiperprolactinemia. Antipsicóticos atípicos possuem um mecanismo mais complexo, com antagonismo D2 e também antagonismo serotoninérgico 5-HT2A. Essa combinação resulta em menor incidência de EEP, potencial melhora em sintomas negativos e cognitivos, mas podem estar associados a ganho de peso e distúrbios metabólicos."
+            }
+            // Adicionar mais 63 questões de múltipla escolha e 9 discursivas aqui
+        ];
+
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+        let score = 0;
+
+        const questionArea = document.getElementById('question-area');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const scoreArea = document.getElementById('score-area');
+        const scoreDisplay = document.getElementById('score');
+        const restartBtn = document.getElementById('restart-btn');
+
+        function renderQuestion() {
+            const questionData = quizData[currentQuestionIndex];
+            questionArea.innerHTML = ''; // Limpa a área da pergunta anterior
+
+            const questionBlock = document.createElement('div');
+            questionBlock.classList.add('question-block');
+
+            const questionText = document.createElement('p');
+            questionText.classList.add('question-text');
+            questionText.textContent = `(${questionData.theme}) ${currentQuestionIndex + 1}. ${questionData.question}`;
+            questionBlock.appendChild(questionText);
+
+            if (questionData.type === 'multiple_choice') {
+                const optionsList = document.createElement('ul');
+                optionsList.classList.add('options-list');
+                questionData.options.forEach(option => {
+                    const listItem = document.createElement('li');
+                    listItem.dataset.key = option.key;
+                    listItem.textContent = `${option.key}) ${option.text}`;
+                    listItem.addEventListener('click', () => {
+                        if (!questionBlock.classList.contains('answered')) {
+                            selectOption(listItem, optionsList);
+                        }
+                    });
+                    if (userAnswers[currentQuestionIndex] && userAnswers[currentQuestionIndex].selected === option.key) {
+                        listItem.classList.add('selected');
+                    }
+                    optionsList.appendChild(listItem);
+                });
+                questionBlock.appendChild(optionsList);
+            } else if (questionData.type === 'discursive') {
+                const textArea = document.createElement('textarea');
+                textArea.rows = 5;
+                textArea.style.width = '95%';
+                textArea.placeholder = 'Digite sua resposta aqui...';
+                if (userAnswers[currentQuestionIndex] && userAnswers[currentQuestionIndex].text) {
+                    textArea.value = userAnswers[currentQuestionIndex].text;
+                }
+                textArea.addEventListener('input', (e) => {
+                     if (!userAnswers[currentQuestionIndex]) userAnswers[currentQuestionIndex] = {};
+                     userAnswers[currentQuestionIndex].text = e.target.value;
+                });
+                questionBlock.appendChild(textArea);
+            }
+            
+            questionArea.appendChild(questionBlock);
+
+            if (userAnswers[currentQuestionIndex] && userAnswers[currentQuestionIndex].answered) {
+                showFeedback(questionBlock, questionData, userAnswers[currentQuestionIndex].selected || userAnswers[currentQuestionIndex].text);
+            }
+
+            updateNavigationButtons();
+        }
+
+        function selectOption(selectedLi, optionsList) {
+            Array.from(optionsList.children).forEach(li => li.classList.remove('selected'));
+            selectedLi.classList.add('selected');
+            if (!userAnswers[currentQuestionIndex]) userAnswers[currentQuestionIndex] = {};
+            userAnswers[currentQuestionIndex].selected = selectedLi.dataset.key;
+        }
+
+        function handleSubmit() {
+            const questionData = quizData[currentQuestionIndex];
+            const questionBlock = questionArea.querySelector('.question-block');
+            if (questionBlock.classList.contains('answered')) return;
+
+            let selectedValue = null;
+            if (questionData.type === 'multiple_choice') {
+                const selectedOptionElement = questionBlock.querySelector('.options-list li.selected');
+                if (!selectedOptionElement) {
+                    alert('Por favor, selecione uma opção.');
+                    return;
+                }
+                selectedValue = selectedOptionElement.dataset.key;
+            } else if (questionData.type === 'discursive') {
+                const textArea = questionBlock.querySelector('textarea');
+                if (!textArea.value.trim()) {
+                    alert('Por favor, digite sua resposta.');
+                    return;
+                }
+                selectedValue = textArea.value.trim(); // For discursive, selectedValue is the text itself
+            }
+
+            userAnswers[currentQuestionIndex] = { ...userAnswers[currentQuestionIndex], answered: true };
+            if (questionData.type === 'multiple_choice') {
+                 userAnswers[currentQuestionIndex].selected = selectedValue;
+                if (selectedValue === questionData.answer) {
+                    score++;
+                }
+            }
+            // For discursive, manual grading would be needed, so no automatic score update here.
+
+            showFeedback(questionBlock, questionData, selectedValue);
+            questionBlock.classList.add('answered');
+            submitBtn.classList.add('hidden');
+            nextBtn.classList.remove('hidden');
+            if(currentQuestionIndex === quizData.length - 1) {
+                nextBtn.textContent = 'Ver Pontuação';
+            }
+        }
+
+        function showFeedback(questionBlock, questionData, userAnswerKeyOrText) {
+            const feedbackSection = document.createElement('div');
+            feedbackSection.classList.add('feedback-section');
+
+            let feedbackHtml = `<h4>Gabarito e Comentários:</h4>`;
+            feedbackHtml += `<p><strong>Explicação Geral:</strong> ${questionData.explanation_general}</p>`;
+
+            if (questionData.type === 'multiple_choice') {
+                feedbackHtml += `<p><strong>Sua resposta:</strong> ${userAnswerKeyOrText}</p>`;
+                feedbackHtml += `<p class="correct-answer-text"><strong>Resposta Correta:</strong> ${questionData.answer}</p>`;
+                feedbackHtml += `<h5>Justificativas das Alternativas:</h5>`;
+                const optionsList = questionBlock.querySelector('.options-list');
+                questionData.options.forEach(option => {
+                    const optionLi = optionsList.querySelector(`li[data-key="${option.key}"]`);
+                    let justificationClass = '';
+                    if (option.key === questionData.answer) {
+                        optionLi.classList.add('correct-option');
+                        justificationClass = 'correct-option'; 
+                    } else if (option.key === userAnswerKeyOrText) {
+                        optionLi.classList.add('incorrect-option');
+                        justificationClass = 'incorrect-option';
+                    }
+                    feedbackHtml += `<div class="option-justification ${justificationClass}"><strong>${option.key}) ${option.text}:</strong> ${option.justification}</div>`;
+                });
+            }
+            // For discursive, we just show the model answer/explanation.
+            // The user's text is already in userAnswerKeyOrText if needed for display.
+
+            feedbackSection.innerHTML = feedbackHtml;
+            questionBlock.appendChild(feedbackSection);
+            
+            // Disable further interaction with options
+            if (questionData.type === 'multiple_choice') {
+                questionBlock.querySelectorAll('.options-list li').forEach(li => {
+                    li.style.pointerEvents = 'none'; // Disables click
+                });
+            } else if (questionData.type === 'discursive') {
+                questionBlock.querySelector('textarea').disabled = true;
+            }
+        }
+
+        function updateNavigationButtons() {
+            prevBtn.classList.toggle('hidden', currentQuestionIndex === 0);
+            if (userAnswers[currentQuestionIndex] && userAnswers[currentQuestionIndex].answered) {
+                submitBtn.classList.add('hidden');
+                nextBtn.classList.remove('hidden');
+                if(currentQuestionIndex === quizData.length - 1) {
+                     nextBtn.textContent = 'Ver Pontuação';
+                } else {
+                    nextBtn.textContent = 'Próxima';
+                }
+            } else {
+                submitBtn.classList.remove('hidden');
+                nextBtn.classList.add('hidden');
+            }
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < quizData.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            } else {
+                // Show score
+                questionArea.classList.add('hidden');
+                prevBtn.classList.add('hidden');
+                nextBtn.classList.add('hidden');
+                submitBtn.classList.add('hidden');
+                scoreArea.classList.remove('hidden');
+                let mcqCount = quizData.filter(q => q.type === 'multiple_choice').length;
+                scoreDisplay.textContent = `${score} de ${mcqCount} (questões de múltipla escolha). Questões discursivas requerem correção manual.`;
+            }
+        });
+        
+        submitBtn.addEventListener('click', handleSubmit);
+
+        restartBtn.addEventListener('click', () => {
+            currentQuestionIndex = 0;
+            userAnswers.fill(null);
+            score = 0;
+            scoreArea.classList.add('hidden');
+            questionArea.classList.remove('hidden');
+            renderQuestion();
+        });
+
+        // Initial render
+        renderQuestion();
+    </script>
+</body>
+</html>
